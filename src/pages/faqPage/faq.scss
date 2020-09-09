@@ -1,0 +1,48 @@
+$primaryColor: #c6a85b;
+
+.faq-page-container {
+  width: 100%;
+  height: 100%;
+  background-image: url(../../assets/pattern_grande_bg.webp);
+  background-repeat: repeat;
+  background-color: #f0f0f0;
+  padding-bottom: 50px;
+
+  .faq-page-content {
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    ul {
+      li {
+        margin-top: 20px;
+        margin-left: 10px;
+        cursor: pointer;
+      }
+      li:hover {
+        color: $primaryColor;
+      }
+    }
+
+    .drop-down-faq {
+      margin-left: 20px;
+      margin-top: 10px;
+      overflow: hidden;
+      height: 0;
+      transition: 0.2s ease-in-out;
+      opacity: 0;
+    }
+
+    .drop-down-active {
+      overflow: visible;
+      height: 100%;
+      opacity: 1;
+    }
+  }
+}

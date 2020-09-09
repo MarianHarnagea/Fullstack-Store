@@ -1,0 +1,54 @@
+$primaryColor: #c6a85b;
+
+.contactus-container {
+  width: 90%;
+  margin: auto;
+
+  .contact-text {
+    font-size: 16px;
+    @media (min-width: 768px) {
+      font-size: 18px;
+    }
+    @media (min-width: 992px) {
+      font-size: 20px;
+    }
+  }
+
+  .form-container {
+    padding: 20px;
+    background-color: rgb(245, 245, 245);
+
+    input {
+      width: 100%;
+      height: 45px;
+      padding-left: 20px;
+      margin: 10px 0px;
+      border: none;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      padding-left: 20px;
+      padding-top: 20px;
+      margin: 10px 0px;
+      border: none;
+    }
+
+    button {
+      padding: 10px 30px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: white;
+      background-color: $primaryColor;
+      margin: 10px 0px;
+      border: none;
+      font-weight: 600;
+    }
+
+    button:active {
+      margin: none;
+      background-color: #a78e4f;
+    }
+  }
+}

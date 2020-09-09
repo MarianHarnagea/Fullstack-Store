@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.awssld__content {
+  background-color: transparent;
+}
+
+.awssld {
+  --organic-arrow-thickness: 4px;
+  --organic-arrow-height: 40px;
+  --slider-height-percentage: 100%;
+  --loader-bar-color: #c6a85b;
+  --loader-bar-height: 8px;
+  --control-button-width: 10%;
+  --control-button-height: 25%;
+  --control-button-opacity: 0.5;
+  --control-button-hover-opacity: 0.75;
+  --control-button-background: transparent;
+  --transition-bezier: cubic-bezier(0.5, 0.075, 0.25, 0.95);
+  --slider-transition-duration: 200ms;
+  --organic-arrow-color: #c6a85b;
+  --organic-arrow-border-radius: 0;
+  --control-bullet-color: #6a6a6a;
+  --control-bullet-active-color: #c6a85b;
+  --content-background-color: white;
+}

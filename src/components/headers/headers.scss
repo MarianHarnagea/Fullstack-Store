@@ -1,0 +1,61 @@
+$primaryColor: #c6a85b;
+
+.header-container {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+
+  h1 {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+}
+
+.product-header {
+  width: 100%;
+  height: 100%;
+  background-color: $primaryColor;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  .header-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #69500f, $alpha: 0.7);
+
+    text-align: center;
+    padding: 40px 20px 40px 20px;
+
+    h1 {
+      color: white;
+      z-index: 1;
+      text-transform: uppercase;
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    p {
+      z-index: 1;
+      color: white;
+      margin-top: 30px;
+      font-weight: 100;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+.accessories {
+  background-image: url(../../assets//home-imgs/collection_accessories_650x.jpg);
+}
+.headphones {
+  background-image: url(../../assets//home-imgs/gold-image.jpg);
+}
+.earphones {
+  background-image: url(../../assets//home-imgs/collection_earphones_650x.jpg);
+}

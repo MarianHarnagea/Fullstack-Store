@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const URL = "https://express-store-server.herokuapp.com";
+
 export const FETCHING_PRODUCTS = "FETCHING_PRODUCTS";
 export const FETCHED_PRODUCTS = "FETCH_PRODUCTS";
 export const ERROR_FETCH = "ERROR_FETCH";
@@ -13,7 +15,7 @@ export const EDIT_PRODUCT = "EDIT_PRODUCT";
 export const fetchProducts = () => (dispatch) => {
   dispatch({ type: FETCHING_PRODUCTS });
   axios
-    .get("http://localhost:5000/products")
+    .get(`${URL}/products`)
     .then((products) => {
       dispatch({
         type: FETCHED_PRODUCTS,
@@ -46,7 +48,7 @@ export const createProduct = (product) => (dispatch, getState) => {
   }
 
   axios
-    .post("http://localhost:5000/products", formData, config)
+    .post(`${URL}/products`, formData, config)
     .then((result) => {
       dispatch(fetchProducts());
       dispatch({
@@ -61,7 +63,7 @@ export const createProduct = (product) => (dispatch, getState) => {
 // DELETE PRODUCT
 export const deleteProduct = (id) => (dispatch, getState) => {
   axios
-    .delete(`http://localhost:5000/products/${id}`, tokenConfig(getState))
+    .delete(`${URL}/products/${id}`, tokenConfig(getState))
     .then((res) => dispatch(fetchProducts()))
     .catch((err) => console.log(err));
 };
@@ -78,7 +80,7 @@ export const getEditProductId = (id) => (dispatch) => {
 export const editProductInfo = (product) => (dispatch, getState) => {
   axios
     .put(
-      `http://localhost:5000/products/product/info/${product.id}`,
+      `${URL}/products/product/info/${product.id}`,
       product,
       tokenConfig(getState)
     )
@@ -104,11 +106,7 @@ export const editProductImage = (product) => (dispatch, getState) => {
   }
 
   axios
-    .put(
-      `http://localhost:5000/products/product/image/${product.id}`,
-      formData,
-      config
-    )
+    .put(`${URL}/products/product/image/${product.id}`, formData, config)
     .then(() => {
       dispatch(fetchProducts());
     })
@@ -128,7 +126,7 @@ export const addProdactImages = (image, id) => (dispatch, getState) => {
   }
 
   axios
-    .put(`http://localhost:5000/products/${id}`, formData, config)
+    .put(`${URL}/products/${id}`, formData, config)
     .then(() => {
       dispatch(fetchProducts());
     })
@@ -138,7 +136,7 @@ export const addProdactImages = (image, id) => (dispatch, getState) => {
 // ADD COMMENTS TO PRODUCT
 export const addComment = (reviewFormVal, id) => (dispatch) => {
   axios
-    .put(`http://localhost:5000/products/comment/${id}`, reviewFormVal)
+    .put(`${URL}/products/comment/${id}`, reviewFormVal)
     .then((result) => {
       dispatch(fetchProducts());
     })

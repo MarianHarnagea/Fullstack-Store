@@ -2,6 +2,8 @@ import axios from "axios";
 import { loadOrders } from "../actions/ordersActions";
 import { loadCart } from "../actions/cartActions";
 
+const URL = "https://express-store-server.herokuapp.com";
+
 export const CART_PRODUCTS = "CART_PRODUCTS";
 export const PERSONAL_INFO = "PERSONAL_INFO";
 export const CONFIRMED_ORDER = "CONFIRMED_ORDER";
@@ -23,7 +25,7 @@ export const getPersonalInfo = (userInfo) => (dispatch) => {
 export const orderSuccesfull = () => (dispatch, getState) => {
   const orderInfo = getState().checkout;
   axios
-    .post("http://localhost:5000/orders", orderInfo)
+    .post(`${URL}/orders`, orderInfo)
     .then(
       dispatch({
         type: CONFIRMED_ORDER,

@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const URL = "https://express-store-server.herokuapp.com";
+
 export const FETCHING_ORDERS = "FETCHING_ORDERS";
 export const FETCHED_ORDERS = "FETCHED_ORDERS";
 
@@ -8,7 +10,7 @@ export const loadOrders = () => (dispatch) => {
     type: FETCHING_ORDERS,
   });
   axios
-    .get("http://localhost:5000/orders")
+    .get(`${URL}/orders`)
     .then((result) => {
       dispatch({
         type: FETCHED_ORDERS,
@@ -20,7 +22,7 @@ export const loadOrders = () => (dispatch) => {
 
 export const deleteOrder = (id) => (dispatch, getState) => {
   axios
-    .delete(`http://localhost:5000/orders/delete/${id}`, tokenConfig(getState))
+    .delete(`${URL}/orders/delete/${id}`, tokenConfig(getState))
     .then((result) => {
       dispatch(loadOrders());
     })
@@ -33,7 +35,7 @@ export const editOrder = (orderId, orderStatus) => (dispatch, getState) => {
     status: orderStatus,
   };
   axios
-    .put("http://localhost:5000/orders/edit", order, tokenConfig(getState))
+    .put(`${URL}/orders/edit`, order, tokenConfig(getState))
     .then((result) => {
       dispatch(loadOrders());
     })

@@ -6,6 +6,8 @@ import {
   REGISTER_ERROR,
 } from "./errorsActions";
 
+const URL = "https://express-store-server.herokuapp.com";
+
 export const FETCH_USER = "FETCH_USER";
 export const FETCHED_USER = "FETCHED_USER";
 export const REGISTER_SUCCESFUL = "REGISTER_SUCCESFUL";
@@ -18,7 +20,7 @@ export const fetchUser = () => (dispatch, getState) => {
   dispatch({ type: FETCH_USER });
 
   axios
-    .get("http://localhost:5000/auth/user", tokenConfig(getState))
+    .get(`${URL}/auth/user`, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: FETCHED_USER,
@@ -52,7 +54,7 @@ export const registerUser = ({ firstname, lastname, email, password }) => (
   });
 
   axios
-    .post("http://localhost:5000/auth/register", userCredentials, config)
+    .post(`${URL}/auth/register`, userCredentials, config)
     .then((res) => {
       dispatch({
         type: REGISTER_SUCCESFUL,
@@ -82,7 +84,7 @@ export const loginUser = ({ email, password }) => (dispatch) => {
   });
 
   axios
-    .post("http://localhost:5000/auth/login", loginCredentials, config)
+    .post(`${URL}/auth/login`, loginCredentials, config)
     .then((res) => {
       dispatch({
         type: LOGIN_SUCCESFUL,

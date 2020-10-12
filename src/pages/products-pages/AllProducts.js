@@ -3,11 +3,14 @@ import "./collection.scss";
 import Header from "../../components/headers/Header";
 import Product from "../../components/products-page-components/Product";
 
+import LoadingSpiner from "../../components/spinner/LoadingSpiner";
+
 // redux
 import { useSelector } from "react-redux";
 
 const AllProducts = () => {
   const products = useSelector((state) => state.products.products);
+  const productsLoading = useSelector(({ products }) => products.loading);
 
   return (
     <div className="collection">
@@ -15,11 +18,15 @@ const AllProducts = () => {
 
       <div className="products">
         <div className="row">
-          {products
-            ? products.map((product) => (
-                <Product key={product._id} product={product} />
-              ))
-            : "LOADING"}
+          {productsLoading ? (
+            <LoadingSpiner />
+          ) : products ? (
+            products.map((product) => (
+              <Product key={product._id} product={product} />
+            ))
+          ) : (
+            "LOADING"
+          )}
         </div>
       </div>
     </div>

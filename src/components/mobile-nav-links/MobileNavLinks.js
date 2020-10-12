@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 import "./mobileNavLinks.scss";
 import dropdownPlusBtn from "../../assets/home-imgs/dropdown-plus.png";
 
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/actions/authActions";
+
 const MobileNavLinks = ({ mobileMenu, handleCloseAll }) => {
   const [dropdown, setDropdown] = useState(false);
+  const auth = useSelector(({ auth }) => auth);
+  const dispatch = useDispatch();
 
   const handleDropDown = () => {
     setDropdown(!dropdown);
@@ -74,16 +79,29 @@ const MobileNavLinks = ({ mobileMenu, handleCloseAll }) => {
             FAQ
           </Link>
         </li>
-        <li>
-          <Link to="/dashboard" onClick={handleCloseAll}>
-            Dashboard
-          </Link>
-        </li>
-        <li>
-          <Link to="/login" onClick={handleCloseAll}>
-            Login
-          </Link>
-        </li>
+        {auth.role === "admin" ? (
+          <li>
+            <Link to="/dashboard" onClick={handleCloseAll}>
+              Dashboard
+            </Link>
+          </li>
+        ) : (
+          ""
+        )}
+
+        {auth.isAuthentificated ? (
+          <li>
+            <Link onClick={() => dispatch(logout())} to="#">
+              Logout
+            </Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/login" onClick={handleCloseAll}>
+              Login
+            </Link>
+          </li>
+        )}
       </ul>
     </div>
   );

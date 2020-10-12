@@ -18,13 +18,13 @@ export default (state = initState, action) => {
   switch (action.type) {
     case FETCHING_PRODUCTS:
       return {
-        ...state.state,
+        ...state,
         loading: true,
         error: null,
       };
     case ERROR_FETCH:
       return {
-        ...state.state,
+        ...state,
         loading: false,
         error: action.payload,
       };
@@ -46,8 +46,6 @@ export default (state = initState, action) => {
         productId: action.payload,
       };
     default:
-      return {
-        state,
-      };
+      return state;
   }
 };

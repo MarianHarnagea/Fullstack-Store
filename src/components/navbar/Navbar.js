@@ -7,8 +7,16 @@ import cartMobile from "../../assets/home-imgs/cart_icon.png";
 import arrowDown from "../../assets/home-imgs/down-arrow.png";
 import Dropdown from "./Dropdown";
 
+// REDUX
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/actions/authActions";
+
 function Navbar({ openCart, openMenu }) {
   const [navdropdown, setNavDropdown] = useState(false);
+  const auth = useSelector(({ auth }) => auth);
+  const state = useSelector((state) => state.cart);
+
+  const dispatch = useDispatch();
 
   const handleNavDropdown = () => {
     setNavDropdown(true);
@@ -51,25 +59,38 @@ function Navbar({ openCart, openMenu }) {
             <li>
               <Link to="/faq">FAQ</Link>
             </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
+            {auth.role === "admin" ? (
+              <li>
+                <Link to="/dashboard">Dashboard</Link>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
         </div>
 
         <div className="login-cart">
-          <h4>
-            <Link to="/login">Login</Link>
-          </h4>
+          {auth.isAuthentificated ? (
+            <h4>
+              <Link onClick={() => dispatch(logout())} to="#">
+                Logout
+              </Link>
+            </h4>
+          ) : (
+            <h4>
+              <Link to="/login">Login</Link>
+            </h4>
+          )}
+
           <div className="cart-md" onClick={openCart}>
             <h4>Cart</h4>
-            <span>2</span>
+            <span>{state.cart !== null ? state.cart.length : 0}</span>
           </div>
         </div>
 
         <div className="cart-mobile" onClick={openCart}>
           <img src={cartMobile} alt="cartMobile" />
-          <span>2</span>
+          <span>{state.cart !== null ? state.cart.length : 0} </span>
         </div>
       </div>
       <Dropdown

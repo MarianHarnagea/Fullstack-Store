@@ -43,7 +43,7 @@ const CreateProduct = () => {
           required
         />
         <input
-          type="text"
+          type="number"
           placeholder="Price"
           value={product.price}
           onChange={(e) => setProduct({ ...product, price: e.target.value })}

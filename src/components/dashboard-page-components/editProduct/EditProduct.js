@@ -3,7 +3,10 @@ import { useHistory } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
-import { editProduct } from "../../../store/actions/productsActions";
+import {
+  editProductInfo,
+  editProductImage,
+} from "../../../store/actions/productsActions";
 
 const EditProduct = ({ setIsModalActive }) => {
   const id = useSelector((state) => state.products.productId);
@@ -24,53 +27,68 @@ const EditProduct = ({ setIsModalActive }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleEditProduct = (e) => {
+  const handleEditProductInfo = (e) => {
     e.preventDefault();
-    dispatch(editProduct(product));
-    setIsModalActive(false);
-    history.push("/dashboard");
+    dispatch(editProductInfo(product));
+    // setIsModalActive(false);
+    // history.push("/dashboard");
+  };
+
+  const handleEditProductImage = (e) => {
+    e.preventDefault();
+    dispatch(editProductImage(product));
+    // setIsModalActive(false);
+    // history.push("/dashboard");
   };
   return (
-    <form onSubmit={handleEditProduct}>
-      <h3>Edit Product</h3>
-      <input
-        type="text"
-        placeholder="Title"
-        value={product.title}
-        onChange={(e) => setProduct({ ...product, title: e.target.value })}
-        required
-      />
-      <textarea
-        placeholder="Description"
-        value={product.description}
-        onChange={(e) =>
-          setProduct({ ...product, description: e.target.value })
-        }
-        required
-      />
-      <input
-        type="text"
-        placeholder="Price"
-        value={product.price}
-        onChange={(e) => setProduct({ ...product, price: e.target.value })}
-        required
-      />
-      <select
-        name="Category"
-        value={product.category}
-        onChange={(e) => setProduct({ ...product, category: e.target.value })}
-      >
-        <option value="headphones">Headphones</option>
-        <option value="earphones">Earphones</option>
-        <option value="accesories">Accesories</option>
-      </select>
-      <input
-        type="file"
-        placeholder="Add An Image Product"
-        onChange={(e) => setProduct({ ...product, image: e.target.files[0] })}
-      />
-      <button type="submit">Add Product</button>
-    </form>
+    <>
+      <form onSubmit={handleEditProductInfo}>
+        <h3>Edit Product Info</h3>
+        <input
+          type="text"
+          placeholder="Title"
+          value={product.title}
+          onChange={(e) => setProduct({ ...product, title: e.target.value })}
+          required
+        />
+        <textarea
+          placeholder="Description"
+          value={product.description}
+          onChange={(e) =>
+            setProduct({ ...product, description: e.target.value })
+          }
+          required
+        />
+        <input
+          type="number"
+          placeholder="Price"
+          value={product.price}
+          onChange={(e) => setProduct({ ...product, price: e.target.value })}
+          required
+        />
+        <select
+          name="Category"
+          value={product.category}
+          onChange={(e) => setProduct({ ...product, category: e.target.value })}
+        >
+          <option value="headphones">Headphones</option>
+          <option value="earphones">Earphones</option>
+          <option value="accesories">Accesories</option>
+        </select>
+
+        <button type="submit">Change Product Info</button>
+      </form>
+      <form onSubmit={handleEditProductImage}>
+        <h3>Edit Product Image</h3>
+        <input
+          required
+          type="file"
+          placeholder="Add An Image Product"
+          onChange={(e) => setProduct({ ...product, image: e.target.files[0] })}
+        />
+        <button>Change Product Image</button>
+      </form>
+    </>
   );
 };
 

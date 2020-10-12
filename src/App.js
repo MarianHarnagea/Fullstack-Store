@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import { Switch, Route } from "react-router-dom";
 import "./App.css";
 
-// Pages
-import Home from "./pages/homepage/Home";
-import AllProducts from "./pages/products-pages/AllProducts";
-import Accessories from "./pages/products-pages/Accessories";
-import Earphones from "./pages/products-pages/Earphones";
-import Headphones from "./pages/products-pages/Headphones";
-import ProductDetails from "./pages/products-pages/ProductDetails";
-import Blog from "./pages/blogPage/Blog";
-import ContactUs from "./pages/contactUsPage/ContactUs";
-import FAQ from "./pages/faqPage/FAQ";
-import Login from "./pages/auth/loginPage/Login";
-import Register from "./pages/auth/signUpPage/Register";
-import Dashboard from "./pages/dashboard/Dashboard";
+import { NonPrivateRoute, PrivateRoute } from "./router/Routes";
+
+// Redux
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "./store/actions/productsActions";
+import { fetchUser } from "./store/actions/authActions";
+import { loadCart } from "./store/actions/cartActions";
+import { loadCheckoutProducts } from "./store/actions/checkoutActions";
+import { loadOrders } from "./store/actions/ordersActions";
 
 // Components
 import Navbar from "./components/navbar/Navbar";
@@ -22,17 +18,35 @@ import MobileNavLinks from "./components/mobile-nav-links/MobileNavLinks";
 import Cart from "./components/cart/Cart";
 import Wrapper from "./components/wrapper/Wrapper";
 import Footer from "./components/footer/Footer";
-import ScrollToTop from "./components/scrollToTop/ScrollToTop";
+import ScrollToTop from "./router/ScrollToTop";
+import LoadingSpiner from "./components/spinner/LoadingSpiner";
 
-// Redux
-import { useDispatch } from "react-redux";
-import { fetchProducts } from "./store/actions/productsActions";
+// Pages
+import Home from "./pages/homepage/Home";
+const AllProducts = lazy(() => import("./pages/products-pages/AllProducts"));
+const Accessories = lazy(() => import("./pages/products-pages/Accessories"));
+const Earphones = lazy(() => import("./pages/products-pages/Earphones"));
+const Headphones = lazy(() => import("./pages/products-pages/Headphones"));
+const ProductDetails = lazy(() =>
+  import("./pages/products-pages/ProductDetails")
+);
+const Blog = lazy(() => import("./pages/blogPage/Blog"));
+const ContactUs = lazy(() => import("./pages/contactUsPage/ContactUs"));
+const FAQ = lazy(() => import("./pages/faqPage/FAQ"));
+const Login = lazy(() => import("./pages/auth/loginPage/Login"));
+const Register = lazy(() => import("./pages/auth/signUpPage/Register"));
+const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
+const Checkout = lazy(() => import("./pages/checkout/Checkout"));
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchUser());
+    dispatch(loadCart());
+    dispatch(loadCheckoutProducts());
+    dispatch(loadOrders());
   }, [dispatch]);
 
   const [cart, setCart] = useState(false);
@@ -59,31 +73,48 @@ function App() {
       setWrapper(false);
     }
   };
-
   const handleCloseAll = () => {
     setMobileMenu(false);
     setCart(false);
     setWrapper(false);
   };
 
-  return (
-    <Router>
-      <div className="App">
-        <ScrollToTop />
-        <Navbar
-          openCart={openCart}
-          openMenu={openMenu}
-          handleCloseAll={handleCloseAll}
-        />
-        <MobileNavLinks
-          mobileMenu={mobileMenu}
-          handleCloseAll={handleCloseAll}
-        />
-        <Cart cart={cart} />
-        <Wrapper wrapper={wrapper} handleWrapperClose={handleCloseAll} />
+  const AdminAccount = () => {
+    return (
+      <div className="admin-account">
+        <ul>
+          <li>Log in as admin to view dashboard!</li>
+          <li>Email: admin@yahoo.com</li>
+          <li>Password: admin</li>
+        </ul>
+      </div>
+    );
+  };
 
-        <Switch>
-          <Route exact path="/" component={Home} />
+  return (
+    <div className="App">
+      <ScrollToTop />
+
+      <Navbar
+        openCart={openCart}
+        openMenu={openMenu}
+        handleCloseAll={handleCloseAll}
+      />
+      <AdminAccount />
+      <MobileNavLinks mobileMenu={mobileMenu} handleCloseAll={handleCloseAll} />
+      <Cart cart={cart} handleCloseAll={handleCloseAll} />
+      <Wrapper wrapper={wrapper} handleWrapperClose={handleCloseAll} />
+
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Suspense fallback={<LoadingSpiner />}>
+          <NonPrivateRoute path="/login">
+            <Login />
+          </NonPrivateRoute>
+          <NonPrivateRoute path="/register">
+            <Register />
+          </NonPrivateRoute>
+
           <Route path="/collection/all" component={AllProducts} />
           <Route path="/collection/accessories" component={Accessories} />
           <Route path="/collection/earphones" component={Earphones} />
@@ -91,16 +122,17 @@ function App() {
           <Route path="/blog" component={Blog} />
           <Route path="/contactus" component={ContactUs} />
           <Route path="/faq" component={FAQ} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/checkout" component={Checkout} />
           <Route path="/collection/product/:id" component={ProductDetails} />
-          <Route component={Home} />
-        </Switch>
 
-        <Footer />
-      </div>
-    </Router>
+          <PrivateRoute path="/dashboard">
+            <Dashboard />
+          </PrivateRoute>
+        </Suspense>
+      </Switch>
+
+      <Footer />
+    </div>
   );
 }
 

@@ -3,11 +3,14 @@ import ProductsHeader from "../../components/headers/ProductsHeader";
 import "./collection.scss";
 import Product from "../../components/products-page-components/Product";
 
+import LoadingSpiner from "../../components/spinner/LoadingSpiner";
+
 // redux
 import { useSelector } from "react-redux";
 
 const Accessories = () => {
   const products = useSelector((state) => state.products.products);
+  const productsLoading = useSelector(({ products }) => products.loading);
 
   return (
     <div className="collection">
@@ -21,13 +24,17 @@ const Accessories = () => {
             }
           />
 
-          {products
-            ? products.map((product) =>
-                product.category === "earphones" ? (
-                  <Product key={product._id} product={product} />
-                ) : null
-              )
-            : "LOADING"}
+          {productsLoading ? (
+            <LoadingSpiner />
+          ) : products ? (
+            products.map((product) =>
+              product.category === "earphones" ? (
+                <Product key={product._id} product={product} />
+              ) : null
+            )
+          ) : (
+            "LOADING"
+          )}
         </div>
       </div>
     </div>

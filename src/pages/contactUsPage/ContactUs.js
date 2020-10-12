@@ -4,7 +4,7 @@ import "./contactus.scss";
 
 const ContactUs = () => {
   return (
-    <div className="contactus-container my-5">
+    <div className="contactus-container mb-5">
       <Header title="Contact Us" />
       <div className="row py-3">
         <div className="col-12 col-md-6 col-xl-5">

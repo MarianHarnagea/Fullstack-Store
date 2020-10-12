@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
-import minus from "../../assets/product-details/minus.png";
-import add from "../../assets/product-details/add.png";
-import axios from "axios";
-
 import "./collection.scss";
+// import minus from "../../assets/product-details/minus.png";
+// import add from "../../assets/product-details/add.png";
+import loading from "../../assets/loading.gif";
+import toaster from "toasted-notes";
+import "toasted-notes/src/styles.css";
 import Review from "../../components/products-page-components/Review";
 import ReviewProduct from "../../components/products-page-components/ReviewProduct";
-
 import AwesomeSlider from "react-awesome-slider";
 import "react-awesome-slider/dist/styles.css";
 
+// REDUX
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../../store/actions/cartActions";
+import { addComment } from "../../store/actions/productsActions";
+
 const ProductDetails = ({ match }) => {
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [sliderImages, setSliderImages] = useState([]);
   const [tabs, setTabs] = useState({
@@ -25,24 +30,31 @@ const ProductDetails = ({ match }) => {
     body: "",
   });
   const [activeReviewForm, setActiveReviewForm] = useState(false);
-
+  const dispatch = useDispatch();
   const id = match.params.id;
+
+  const products = useSelector((state) => state.products.products);
+  const filteredProduct = products.filter((product) => product._id === id);
 
   // Fetch product
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/products/${id}`)
-      .then((product) => {
-        setProduct(product.data);
-        setReviews(product.data.comments);
-        setSliderImages(product.data.carousel_images);
-      })
-
-      .catch((err) => console.log(err));
-  }, [id]);
+    if (filteredProduct[0] !== undefined) {
+      setProduct(filteredProduct[0]);
+      setReviews(filteredProduct[0].comments);
+      setSliderImages(filteredProduct[0].carousel_images);
+    }
+  }, [filteredProduct]);
 
   const handleExpandReviewForm = () => {
     setActiveReviewForm(!activeReviewForm);
+  };
+
+  const addToCart = () => {
+    dispatch(addProduct(product));
+    toaster.notify("Product Added", {
+      duration: 2000,
+      position: "bottom-left",
+    });
   };
 
   const handleValues = (e) => {
@@ -53,16 +65,12 @@ const ProductDetails = ({ match }) => {
       reviewFormVal.name !== "" &&
       reviewFormVal.body !== ""
     ) {
-      axios
-        .put(`http://localhost:5000/products/comment/${id}`, reviewFormVal)
-        .then((result) => {
-          setReviewFormVal({
-            title: "",
-            name: "",
-            body: "",
-          });
-        })
-        .catch((err) => console.log(err));
+      dispatch(addComment(reviewFormVal, id));
+      setReviewFormVal({
+        title: "",
+        name: "",
+        body: "",
+      });
     }
   };
 
@@ -114,144 +122,153 @@ const ProductDetails = ({ match }) => {
   return (
     <div className="collection pb-5">
       <div className="product-details">
-        <div className="row">
-          <div className="col-12 col-md-6">
-            <div className="product-meta d-md-none text-center">
-              <p>Master & Dynamic</p>
-              <h1>{product.title}</h1>
-              <h2>$ {product.price}</h2>
+        {product ? (
+          <div className="row">
+            <div className="col-12 col-md-6">
+              <div className="product-meta d-md-none text-center">
+                <p>Master & Dynamic</p>
+                <h1>{product.title}</h1>
+                <h2>$ {parseInt(product.price).toFixed(2)}</h2>
+              </div>
+              <div className="product-image py-3">{imageSlider}</div>
             </div>
-            <div className="product-image py-3">{imageSlider}</div>
-          </div>
-          <div className="col-12 col-md-6">
-            <div className="product-meta d-none d-md-flex flex-column">
-              <p>Master & Dynamic</p>
-              <h1>{product.title}</h1>
-              <h2>$ {product.price}</h2>
-            </div>
-
-            <div className="quantity-container">
-              <p>Quantity</p>
-              <button>
-                <img src={minus} alt="minus" />
-              </button>
-              <h4>1</h4>
-              <button>
-                <img src={add} alt="add" />
-              </button>
-            </div>
-
-            <div className="add-to-cart-btn">
-              <button>add to cart</button>
-            </div>
-
-            <div className="description-container">
-              <h3>{product.description}</h3>
-              <h3>description</h3>
-            </div>
-
-            <div className="share-container">
-              <p>share</p>
-            </div>
-
-            <div className="product-tabs mt-5">
-              <div className="tabs">
-                <p
-                  onClick={(e) => handleActiveTab(e)}
-                  className={tabs.reviewsTab ? "active-tab" : ""}
-                >
-                  reviews
-                </p>
-                <p
-                  onClick={(e) => handleActiveTab(e)}
-                  className={tabs.returnsTab ? "active-tab" : ""}
-                >
-                  returns
-                </p>
-                <p
-                  onClick={(e) => handleActiveTab(e)}
-                  className={tabs.shippingTab ? "active-tab" : ""}
-                >
-                  shipping
-                </p>
+            <div className="col-12 col-md-6">
+              <div className="product-meta d-none d-md-flex flex-column">
+                <p>Master & Dynamic</p>
+                <h1>{product.title}</h1>
+                <h2>$ {product.price}</h2>
               </div>
 
-              <div className="tab-content tab-content-active">
-                <div
-                  className={
-                    tabs.reviewsTab
-                      ? "tab-reviews tab tab-active"
-                      : "tab-reviews tab"
-                  }
-                >
-                  <ReviewsCount />
+              <div className="quantity-container">
+                {/* <p>Quantity</p>
+                <button>
+                  <img src={minus} alt="minus" />
+                </button>
+                <h4>1</h4>
+                <button>
+                  <img src={add} alt="add" />
+                </button> */}
+              </div>
 
-                  <button onClick={handleExpandReviewForm}>
-                    write a review
-                  </button>
+              <div className="add-to-cart-btn">
+                <button onClick={addToCart}>add to cart</button>
+              </div>
 
-                  <ReviewProduct
-                    setReviewFormVal={setReviewFormVal}
-                    reviewFormVal={reviewFormVal}
-                    handleValues={handleValues}
-                    activeReviewForm={activeReviewForm}
-                  />
-                  {reviews.map((review) =>
-                    review ? <Review key={review._id} review={review} /> : null
-                  )}
+              <div className="description-container">
+                <h3>{product.description}</h3>
+                <h3>description</h3>
+              </div>
+
+              <div className="share-container">
+                <p>share</p>
+              </div>
+
+              <div className="product-tabs mt-5">
+                <div className="tabs">
+                  <p
+                    onClick={(e) => handleActiveTab(e)}
+                    className={tabs.reviewsTab ? "active-tab" : ""}
+                  >
+                    reviews
+                  </p>
+                  <p
+                    onClick={(e) => handleActiveTab(e)}
+                    className={tabs.returnsTab ? "active-tab" : ""}
+                  >
+                    returns
+                  </p>
+                  <p
+                    onClick={(e) => handleActiveTab(e)}
+                    className={tabs.shippingTab ? "active-tab" : ""}
+                  >
+                    shipping
+                  </p>
                 </div>
-                <div
-                  className={
-                    tabs.shippingTab
-                      ? "tab-shipping tab tab-active"
-                      : "tab-shipping tab"
-                  }
-                >
-                  <h3 className="text-lead">
-                    Business days are Monday-Friday ; Holidays, Saturday and
-                    Sunday are not included in shipping days.
-                  </h3>
-                  <h3>
-                    <span>Express shipping : </span>Delivery typically in one to
-                    five business days.
-                  </h3>
-                  <h3>
-                    <span>Standard shipping : </span>Delivery by the end of the
-                    third business day after an order has shipped. For example,
-                    if an order is placed Tuesday night and is processed/shipped
-                    on Wednesday, it would arrive on Monday of the following
-                    week.
-                  </h3>
-                </div>
-                <div
-                  className={
-                    tabs.returnsTab
-                      ? "tab-returns tab tab-active"
-                      : "tab-returns tab"
-                  }
-                >
-                  <h3>
-                    Our policy lasts 30 days. If 30 days have gone by since your
-                    purchase, unfortunately we can’t offer you a refund or
-                    exchange.
-                  </h3>
-                  <h3>
-                    To be eligible for a return, your item must be unused and in
-                    the same condition that you received it. It must also be in
-                    the original packaging.
-                  </h3>
-                  <h3>
-                    Several types of goods are exempt from being returned.
-                    Perishable goods such as food, flowers, newspapers or
-                    magazines cannot be returned. We also do not accept products
-                    that are intimate or sanitary goods, hazardous materials, or
-                    flammable liquids or gases.
-                  </h3>
+
+                <div className="tab-content tab-content-active">
+                  <div
+                    className={
+                      tabs.reviewsTab
+                        ? "tab-reviews tab tab-active"
+                        : "tab-reviews tab"
+                    }
+                  >
+                    <ReviewsCount />
+
+                    <button onClick={handleExpandReviewForm}>
+                      write a review
+                    </button>
+
+                    <ReviewProduct
+                      setReviewFormVal={setReviewFormVal}
+                      reviewFormVal={reviewFormVal}
+                      handleValues={handleValues}
+                      activeReviewForm={activeReviewForm}
+                    />
+                    {reviews.map((review) =>
+                      review ? (
+                        <Review key={review._id} review={review} />
+                      ) : null
+                    )}
+                  </div>
+                  <div
+                    className={
+                      tabs.shippingTab
+                        ? "tab-shipping tab tab-active"
+                        : "tab-shipping tab"
+                    }
+                  >
+                    <h3 className="text-lead">
+                      Business days are Monday-Friday ; Holidays, Saturday and
+                      Sunday are not included in shipping days.
+                    </h3>
+                    <h3>
+                      <span>Express shipping : </span>Delivery typically in one
+                      to five business days.
+                    </h3>
+                    <h3>
+                      <span>Standard shipping : </span>Delivery by the end of
+                      the third business day after an order has shipped. For
+                      example, if an order is placed Tuesday night and is
+                      processed/shipped on Wednesday, it would arrive on Monday
+                      of the following week.
+                    </h3>
+                  </div>
+                  <div
+                    className={
+                      tabs.returnsTab
+                        ? "tab-returns tab tab-active"
+                        : "tab-returns tab"
+                    }
+                  >
+                    <h3>
+                      Our policy lasts 30 days. If 30 days have gone by since
+                      your purchase, unfortunately we can’t offer you a refund
+                      or exchange.
+                    </h3>
+                    <h3>
+                      To be eligible for a return, your item must be unused and
+                      in the same condition that you received it. It must also
+                      be in the original packaging.
+                    </h3>
+                    <h3>
+                      Several types of goods are exempt from being returned.
+                      Perishable goods such as food, flowers, newspapers or
+                      magazines cannot be returned. We also do not accept
+                      products that are intimate or sanitary goods, hazardous
+                      materials, or flammable liquids or gases.
+                    </h3>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="d-flex flex-column align-items-center">
+            <img className="m-auto" src={loading} alt="" />
+            <h3>Loading . . .</h3>
+          </div>
+        )}
       </div>
 
       <div className="specs-container py-4 px-3 px-lg-0 mt-3">

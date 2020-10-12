@@ -5,7 +5,7 @@ $primaryColor: #c6a85b;
 
   .subscribe-section {
     width: 100%;
-    padding: 40px;
+    padding: 50px;
     background-color: $primaryColor;
 
     h4 {
@@ -24,31 +24,33 @@ $primaryColor: #c6a85b;
       width: 100%;
       form {
         position: relative;
-        width: 100%;
+        display: flex;
+        margin: 0;
+        @media (max-width: 400px) {
+          flex-wrap: wrap;
+        }
 
         input {
           height: 45px;
           border: none;
           width: 100%;
+          margin: 0;
         }
 
         button {
-          position: absolute;
-          top: 10px;
-          right: 0;
           height: 45px;
-          width: 130px;
+          padding: 0px 20px;
+          width: unset;
           background-color: black;
           color: white;
           border: none;
-          // padding: 0 25px;
           text-transform: uppercase;
           font-size: 0.8rem;
           letter-spacing: 1px;
           font-weight: 600;
 
-          @media (max-width: 500px) {
-            width: 100px;
+          @media (max-width: 400px) {
+            width: 100%;
           }
         }
       }

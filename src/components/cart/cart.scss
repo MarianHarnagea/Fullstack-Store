@@ -31,34 +31,44 @@ $secondaryColor: #c6a85b;
         padding-bottom: 15px;
         margin-top: 15px;
 
-        .product-img {
-          height: 60px;
-          img {
+        a {
+          text-decoration: none;
+
+          .product-img {
+            height: 60px;
+            img {
+              height: 100%;
+            }
+          }
+          .product-name {
             height: 100%;
+            display: flex;
+            // flex-direction: column;
+            align-items: center;
+
+            h2 {
+              font-size: 12px;
+              text-transform: uppercase;
+              font-weight: 600;
+              letter-spacing: 2px;
+              color: gray;
+            }
+
+            h3 {
+              font-size: 14px;
+              font-weight: 500;
+              letter-spacing: 1px;
+              max-width: 90px;
+              color: rgb(80, 80, 80);
+              transition: 0.2s ease-in-out;
+
+              &:hover {
+                color: $secondaryColor;
+              }
+            }
           }
         }
-        .product-name {
-          height: 100%;
-          display: flex;
-          // flex-direction: column;
-          align-items: center;
 
-          h2 {
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: gray;
-          }
-
-          h3 {
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            max-width: 90px;
-            color: rgb(80, 80, 80);
-          }
-        }
         .product-qty {
           height: 100%;
           display: flex;
@@ -88,6 +98,15 @@ $secondaryColor: #c6a85b;
           }
         }
       }
+    }
+
+    .no-products {
+      text-transform: capitalize;
+      font-weight: 600;
+      font-size: 1.7rem;
+      letter-spacing: 1px;
+      color: rgb(194, 194, 194);
+      margin-top: 100px;
     }
 
     .cart-checkout-container {
@@ -125,6 +144,7 @@ $secondaryColor: #c6a85b;
           border: none;
           background: $secondaryColor;
           transition: 0.2s ease-in-out;
+          color: white;
 
           a {
             color: white;

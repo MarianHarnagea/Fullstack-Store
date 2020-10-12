@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ const EditProduct = ({ setIsModalActive }) => {
   });
 
   const dispatch = useDispatch();
-  const history = useHistory();
+  // const history = useHistory();
 
   const handleEditProductInfo = (e) => {
     e.preventDefault();
